@@ -1,0 +1,76 @@
+{
+  "name": "trading-platform-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://reapergodsoul.github.io/trading-platform",
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/material": "^5.14.3",
+    "@mui/x-data-grid": "^6.10.2",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.5",
+    "@types/react": "^18.2.18",
+    "@types/react-dom": "^18.2.7",
+    "ajv": "^8.12.0",
+    "ajv-keywords": "^5.1.0",
+    "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
+    "lightweight-charts": "^4.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.14.2",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.7.2",
+    "socket.io-client": "^4.7.1",
+    "typescript": "^5.1.6",
+    "web-vitals": "^3.4.0",
+    "zustand": "^4.3.9"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx}",
+    "lint:fix": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json}",
+    "type-check": "tsc --noEmit"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "gh-pages": "^6.3.0",
+    "prettier": "^3.0.0"
+  }
+}
