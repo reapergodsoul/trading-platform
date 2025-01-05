@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/tradermarket/static/css/main.551816ac.css",
+    "main.js": "/tradermarket/static/js/main.8e72bf61.js",
+    "index.html": "/tradermarket/index.html",
+    "main.551816ac.css.map": "/tradermarket/static/css/main.551816ac.css.map",
+    "main.8e72bf61.js.map": "/tradermarket/static/js/main.8e72bf61.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.551816ac.css",
+    "static/js/main.8e72bf61.js"
+  ]
+}
