@@ -1,5 +1,13 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Box, Typography, Button } from '@mui/material';
+import React, {  ErrorInfo, ReactNode } from 'react';
+// This line sets the PowerShell execution policy to RemoteSigned, which means that
+// PowerShell scripts must be signed by a trusted publisher to run. This is a
+// security feature to prevent malicious scripts from running on the system.
+// The RemoteSigned policy is a balance between security and convenience, as it
+// allows scripts from trusted sources to run without prompting, while still
+// providing protection against malicious scripts.
+// See https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.2
+// for more information.
 
 interface Props {
   children: ReactNode;
@@ -11,7 +19,7 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
-class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
     error: null,

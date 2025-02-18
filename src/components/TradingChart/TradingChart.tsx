@@ -1,94 +1,113 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { createChart } from 'lightweight-charts';
-import { Box, Paper, Typography } from '@mui/material';
-import axios from 'axios';
+import { 
+  createChart, 
+  IChartApi, 
+  CandlestickData,
+  ColorType,
+  ISeriesApi,
+  CandlestickSeriesOptions
+} from 'lightweight-charts';
+import { Box, useTheme } from '@mui/material';
 
-interface CandleData {
-  time: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
+interface TradingChartProps {
+  data: CandlestickData[];
+  height?: number;
+  autoScale?: boolean;
+  options?: Partial<CandlestickSeriesOptions>;
 }
 
-const TradingChart: React.FC = () => {
+const TradingChart: React.FC<TradingChartProps> = ({ 
+  data = [], 
+  height = 500,
+  autoScale = true,
+  options = {}
+}) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [currentPrice, setCurrentPrice] = useState<string>('');
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=30'
-      );
-
-      const candleData: CandleData[] = response.data.map((d: any) => ({
-        time: new Date(d[0]).toISOString().split('T')[0],
-        open: parseFloat(d[1]),
-        high: parseFloat(d[2]),
-        low: parseFloat(d[3]),
-        close: parseFloat(d[4]),
-      }));
-
-      if (chartContainerRef.current) {
-        const chart = createChart(chartContainerRef.current, {
-          width: chartContainerRef.current.clientWidth,
-          height: 500,
-          layout: {
-            background: { color: '#ffffff' },
-            textColor: '#333333',
-          },
-          grid: {
-            vertLines: { color: '#f0f0f0' },
-            horzLines: { color: '#f0f0f0' },
-          },
-        });
-
-        const series = chart.addCandlestickSeries({
-          upColor: '#26a69a',
-          downColor: '#ef5350',
-          borderVisible: false,
-          wickUpColor: '#26a69a',
-          wickDownColor: '#ef5350',
-        });
-
-        series.setData(candleData);
-        setCurrentPrice(candleData[candleData.length - 1].close.toFixed(2));
-
-        const handleResize = () => {
-          chart.applyOptions({
-            width: chartContainerRef.current?.clientWidth || 800,
-          });
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-          window.removeEventListener('resize', handleResize);
-          chart.remove();
-        };
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  const chartRef = useRef<IChartApi | null>(null);
+  const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
+  const theme = useTheme();
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!chartContainerRef.current) return;
+
+    const chart = createChart(chartContainerRef.current, {
+      width: chartContainerRef.current.clientWidth,
+      height,
+      layout: {
+        background: { 
+          type: ColorType.Solid, 
+          color: theme.palette.background.paper 
+        },
+        textColor: theme.palette.text.primary,
+      },
+      grid: {
+        vertLines: { color: theme.palette.divider },
+        horzLines: { color: theme.palette.divider },
+      },
+      crosshair: {
+        mode: 0,
+        vertLine: {
+          color: theme.palette.primary.main,
+          width: 1,
+          style: 2,
+        },
+        horzLine: {
+          color: theme.palette.primary.main,
+          width: 1,
+          style: 2,
+        },
+      },
+      rightPriceScale: {
+        borderColor: theme.palette.divider,
+      },
+      timeScale: {
+        borderColor: theme.palette.divider,
+        timeVisible: true,
+      },
+      ...options
+    });
+
+    const series = chart.addCandlestickSeries({
+      upColor: theme.palette.success.main,
+      downColor: theme.palette.error.main,
+      borderVisible: false,
+      wickUpColor: theme.palette.success.main,
+      wickDownColor: theme.palette.error.main,
+    });
+
+    series.setData(data);
+    seriesRef.current = series;
+    chartRef.current = chart;
+
+    if (autoScale) {
+      chart.timeScale().fitContent();
+    }
+
+    const handleResize = () => {
+      if (chartContainerRef.current && chartRef.current) {
+        const width = chartContainerRef.current.clientWidth;
+        chartRef.current.applyOptions({ width });
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(chartContainerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      chart.remove();
+    };
+  }, [data, height, theme, autoScale, options]);
 
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        BTC/USDT {currentPrice && `$${currentPrice}`}
-      </Typography>
-      <Box
-        ref={chartContainerRef}
-        sx={{
-          width: '100%',
-          height: 500,
-        }}
-      />
-    </Paper>
+    <Box
+      ref={chartContainerRef}
+      sx={{
+        width: '100%',
+        height: `${height}px`,
+        '& canvas': { width: '100% !important' }
+      }}
+    />
   );
 };
 
